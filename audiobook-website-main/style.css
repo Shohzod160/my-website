@@ -1,0 +1,840 @@
+:root {
+    --background: #0f172a;
+    --foreground: #f8fafc;
+    --primary: #7c3aed;
+    --primary-foreground: #f8fafc;
+    --secondary: #1e293b;
+    --secondary-foreground: #f8fafc;
+    --muted: #1e293b;
+    --muted-foreground: #94a3b8;
+    --border: #1e293b;
+    --radius: 0.75rem;
+  }
+  
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border-color: var(--border);
+  }
+  
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+    scroll-behavior: smooth;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+  
+  header {
+    padding: 16px 0;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+  
+  .nav-links {
+    display: none;
+    gap: 24px;
+  }
+  
+  .nav-links a {
+    color: #94a3b8;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .nav-links a:hover {
+    color: var(--foreground);
+  }
+  
+  .auth-buttons button {
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .auth-buttons .sign-in {
+    background: none;
+    color: #94a3b8;
+    border: none;
+  }
+  
+  .auth-buttons .sign-in:hover {
+    color: var(--foreground);
+  }
+  
+  .auth-buttons .sign-up {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border: none;
+  }
+  
+  .auth-buttons .sign-up:hover {
+    background: #6d28d9;
+  }
+  
+  @media (min-width: 768px) {
+    .nav-links {
+        display: flex;
+    }
+  }
+  
+  .hero {
+    padding: 48px 0;
+  }
+  
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+  
+  .hero-text h1 {
+    font-size: 2.25rem;
+    font-weight: bold;
+    background: linear-gradient(to bottom right, #fff, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  
+  .hero-text p {
+    color: #94a3b8;
+    font-size: 1.125rem;
+    max-width: 600px;
+    margin-bottom: 32px;
+  }
+  
+  .hero-buttons button {
+    padding: 12px 24px;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .hero-buttons .browse {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border: none;
+  }
+  
+  .hero-buttons .browse:hover {
+    background: #6d28d9;
+  }
+  
+  .hero-buttons .how-it-works {
+    background: var(--secondary);
+    color: #94a3b8;
+    border: none;
+  }
+  
+  .hero-buttons .how-it-works:hover {
+    background: #334155;
+  }
+  
+  .hero-image {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+    aspect-ratio: 1/1;
+  }
+  
+  .hero-image .cover-1,
+  .hero-image .cover-2 {
+    position: absolute;
+    width: 80%;
+    height: 80%;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 4px solid;
+  }
+  
+  .hero-image .cover-1 {
+    top: -24px;
+    left: -24px;
+    border-color: var(--secondary);
+  }
+  
+  .hero-image .cover-2 {
+    bottom: -24px;
+    right: -24px;
+    border-color: var(--primary);
+  }
+  
+  .hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .hero-image .icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--background);
+    padding: 16px;
+    border-radius: 50%;
+    animation: pulse 2s infinite ease-in-out;
+  }
+  
+  @keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.1); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+  }
+  
+  @media (min-width: 768px) {
+    .hero-content {
+        flex-direction: row;
+    }
+  
+    .hero-text h1 {
+        font-size: 3.75rem;
+    }
+  }
+  
+  .audiobook-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.3s;
+    aspect-ratio: 3/4;
+  }
+  
+  .audiobook-card.featured {
+    aspect-ratio: 4/3;
+  }
+  
+  @media (min-width: 768px) {
+    .audiobook-card.featured {
+        aspect-ratio: 5/3;
+    }
+  }
+  
+  .audiobook-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+  
+  .audiobook-card:hover img {
+    transform: scale(1.05);
+  }
+  
+  .audiobook-card .gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.4), transparent);
+  }
+  
+  .audiobook-card .content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 16px;
+  }
+  
+  .audiobook-card h3 {
+    font-size: 1.125rem;
+    font-weight: bold;
+    color: #fff;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  @media (min-width: 768px) {
+    .audiobook-card h3 {
+        font-size: 1.25rem;
+    }
+  }
+  
+  .audiobook-card p {
+    color: #94a3b8;
+    font-size: 0.875rem;
+    margin-top: 4px;
+  }
+  
+  .audiobook-card .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+  }
+  
+  .audiobook-card .meta span {
+    color: #94a3b8;
+    font-size: 0.75rem;
+  }
+  
+  .audiobook-card .play-btn {
+    background: var(--primary);
+    border-radius: 50%;
+    padding: 6px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .audiobook-card:hover .play-btn {
+    opacity: 1;
+  }
+  
+  .audiobook-card .featured-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  
+  .featured-section {
+    padding: 40px 0;
+  }
+  
+  .featured-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  
+  .featured-header h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .featured-header a {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: color 0.3s;
+  }
+  
+  .featured-header a:hover {
+    color: #6d28d9;
+  }
+  
+  .featured-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  @media (min-width: 768px) {
+    .featured-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .featured-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  .library-section {
+    padding: 40px 0;
+  }
+  
+  .library-section h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 24px;
+  }
+  
+  .categories {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 16px;
+    scrollbar-width: none;
+  }
+  
+  .categories::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .categories button {
+    padding: 8px 16px;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    background: var(--secondary);
+    color: #94a3b8;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  
+  .categories button.active,
+  .categories button:hover {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+  
+  .library-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+  }
+  
+  @media (min-width: 640px) {
+    .library-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .library-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .library-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+  }
+  
+  .audio-player {
+    position: fixed;
+    bottom: 24px;
+    left: 0;
+    right: 0;
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    backdrop-filter: blur(8px);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    z-index: 100; /* Добавил z-index, чтобы плеер был поверх других элементов */
+  }
+  
+  .player-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .player-content img {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius);
+    object-fit: cover;
+  }
+  
+  .player-info {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .player-info h3 {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .player-info p {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .player-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .player-controls button {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s;
+  }
+  
+  .player-controls button:hover {
+    color: #fff;
+  }
+  
+  .player-controls .play-pause {
+    background: var(--primary);
+    border-radius: 50%;
+    padding: 8px; /* Убедитесь, что отступы консистентны */
+    color: var(--primary-foreground);
+  }
+  
+  .player-controls .play-pause:hover {
+    background: #6d28d9;
+    color: var(--primary-foreground); /* Убедитесь, что цвет не меняется на белый, если фон темный */
+  }
+  
+  /* Стили для кнопки скачивания, если они еще не были добавлены или для уточнения */
+  .player-controls .download-audio {
+    /* Уже есть общие стили для button, здесь можно уточнить, если нужно */
+  }
+  
+  
+  .player-progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  
+  .player-progress span {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    width: 40px;
+    text-align: center; /* Для лучшего выравнивания времени */
+  }
+  
+  .player-progress input[type="range"] {
+    width: 100%;
+    height: 4px;
+    background: #4b5563;
+    border-radius: 9999px;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none; /* Добавил для кроссбраузерности */
+  }
+  
+  .player-progress input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    background: var(--primary);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  .player-progress input[type="range"]::-moz-range-thumb { /* Для Firefox */
+    width: 12px;
+    height: 12px;
+    background: var(--primary);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+  }
+  
+  
+  .volume-control {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 8px;
+  }
+  
+  .volume-control svg { /* Немного уменьшил иконку громкости */
+      width: 16px;
+      height: 16px;
+  }
+  
+  .volume-control input[type="range"] {
+    width: 64px;
+    height: 4px;
+    background: #4b5563;
+    border-radius: 9999px;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  
+  .volume-control input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 10px; /* Сделал чуть меньше */
+    height: 10px;
+    background: var(--primary);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .volume-control input[type="range"]::-moz-range-thumb { /* Для Firefox */
+    width: 10px;
+    height: 10px;
+    background: var(--primary);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+  }
+  
+  
+  @media (max-width: 640px) {
+    .audio-player {
+        padding: 8px;
+        bottom: 8px; /* Немного поднял от края */
+        left: 8px;
+        right: 8px;
+        width: auto; /* Чтобы не вылезал за края */
+    }
+    .player-content {
+        flex-wrap: wrap; /* Позволяет перенос, если не хватает места */
+        gap: 8px; /* Уменьшил отступы */
+    }
+    .player-info {
+      width: 100%; /* На мобильных может занять всю ширину под обложкой */
+      order: 1; /* Обложка, потом инфо, потом контролы */
+      text-align: center; /* Выровнять текст по центру */
+    }
+    .player-content img {
+      order: 0;
+    }
+    .player-controls {
+      width: 100%;
+      justify-content: center; /* Центрировать кнопки */
+      order: 2;
+      margin-top: 8px;
+    }
+  
+    .player-info h3 {
+        font-size: 0.8rem; /* Немного увеличил для читаемости */
+    }
+    .player-info p {
+        font-size: 0.7rem;
+    }
+    .player-progress {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    .player-progress input[type="range"] {
+        width: 100%;
+    }
+    .volume-control {
+        margin-left: 0;
+        justify-content: center; /* Центрировать контрол громкости */
+        width: 100%;
+        margin-top: 8px;
+    }
+    .volume-control input[type="range"] {
+        width: 50%; /* Не на всю ширину, а то слишком большой */
+    }
+  }
+  
+  .about-section {
+    padding: 40px 0;
+  }
+  
+  .about-section h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+  
+  .about-section p {
+    color: #94a3b8;
+    font-size: 1rem;
+    max-width: 800px;
+    margin-bottom: 16px;
+  }
+  
+  .contact-section {
+    padding: 40px 0;
+  }
+  
+  .contact-section h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+  
+  .contact-section p {
+    color: #94a3b8;
+    margin-bottom: 24px;
+  }
+  
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 600px;
+    margin-bottom: 32px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .form-group label {
+    font-size: 0.875rem;
+    color: #94a3b8;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--secondary);
+    color: var(--foreground);
+    font-size: 0.875rem;
+  }
+  
+  .form-group textarea {
+    resize: vertical;
+  }
+  
+  .submit-btn {
+    padding: 12px 24px;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border: none;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .submit-btn:hover {
+    background: #6d28d9;
+  }
+  
+  .contact-info p {
+    font-size: 0.875rem;
+    margin-bottom: 8px;
+  }
+  
+  .contact-info a {
+    color: var(--primary);
+    text-decoration: none;
+  }
+  
+  .contact-info a:hover {
+    text-decoration: underline;
+  }
+  
+  .social-links {
+    display: flex;
+    gap: 16px;
+  }
+  
+  .social-links a {
+    font-size: 0.875rem;
+  }
+  
+  @media (min-width: 768px) {
+    .contact-section {
+        display: flex; /* Было column, можно оставить или убрать, если нужно центрирование контента */
+        flex-direction: column;
+        align-items: center; /* Центрирует форму и инфо */
+    }
+    .contact-form {
+        width: 100%; /* Если родитель центрирует, то это нормально */
+    }
+  }
+  
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Сделал фон темнее */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 16px; /* Отступы для маленьких экранов, чтобы модалка не прилипала */
+  }
+  
+  .modal-content {
+    background: var(--secondary); /* Изменил фон для лучшего контраста с --background */
+    padding: 24px;
+    border-radius: var(--radius);
+    max-width: 400px;
+    width: 100%;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3); /* Добавил тень */
+  }
+  
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #94a3b8;
+  }
+  
+  .modal-close:hover {
+    color: var(--foreground);
+  }
+  
+  .modal h2 {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+    color: var(--foreground); /* Убедимся что текст заголовка видим */
+  }
+  
+  .modal .form-group {
+    margin-bottom: 16px;
+  }
+  
+  .modal .form-group label {
+    font-size: 0.875rem;
+    color: #94a3b8;
+  }
+  
+  .modal .form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--background); /* Изменил фон инпутов в модалке */
+    color: var(--foreground);
+    font-size: 0.875rem;
+  }
+  .modal .form-group input:focus { /* Подсветка при фокусе */
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-foreground);
+  }
