@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест по SQL</title>
+    <style>
+        body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Changed to flex-start for longer content */
+    min-height: 100vh;
+    color: #333;
+}
+
+.quiz-container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+.question-block {
+    margin-bottom: 25px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.question-text {
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #34495e;
+}
+
+.options label {
+    display: block;
+    margin-bottom: 10px;
+    padding: 12px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.options label:hover {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.options input[type="radio"] {
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+#submit-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    font-size: 1.2em;
+    color: #fff;
+    background-color: #3498db;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 30px;
+}
+
+#submit-btn:hover {
+    background-color: #2980b9;
+}
+
+#results {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #eaf2f8;
+    border-left: 5px solid #3498db;
+    border-radius: 5px;
+}
+
+#results h2 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.correct-answer {
+    background-color: #d4edda !important; /* Green for correct */
+    border-color: #c3e6cb !important;
+    color: #155724;
+}
+
+.incorrect-answer {
+    background-color: #f8d7da !important; /* Red for incorrect */
+    border-color: #f5c6cb !important;
+    color: #721c24;
+}
+
+.highlight-correct { /* For showing the actual correct answer if user was wrong */
+    font-weight: bold;
+    border: 2px solid #28a745 !important; /* Green border for actual correct */
+}
+
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Тест по SQL</h1>
+        <div id="quiz"></div>
+        <button id="submit-btn">Проверить ответы</button>
+        <div id="results"></div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const quizContainer = document.getElementById('quiz');
+    const resultsContainer = document.getElementById('results');
+    const submitButton = document.getElementById('submit-btn');
+
+    const questions = [
+        {
+            question: "При создании многоколоночного индекса, такого как CREATE INDEX idx_multi ON my_table (colA, colB, colC), как порядок столбцов обычно влияет на оптимизацию запросов?",
+            options: [
+                "Порядок столбцов не имеет значения; оптимизатор может использовать любую комбинацию столбцов.",
+                "Запросы, фильтрующие только по colC, будут наиболее эффективно оптимизированы.",
+                "Индекс наиболее эффективен для запросов, фильтрующих по colA, или по colA и colB, или по всем трем столбцам.",
+                "Индекс в основном ускоряет запросы, которые сортируют по последнему указанному столбцу (colC)."
+            ],
+            correctAnswer: "Индекс наиболее эффективен для запросов, фильтрующих по colA, или по colA и colB, или по всем трем столбцам."
+        },
+        {
+            question: "Одним из ключевых преимуществ использования представлений для обеспечения безопасности является их способность:",
+            options: [
+                "Автоматически шифровать все данные, выбираемые через представление.",
+                "Предотвращать все атаки типа SQL-инъекций при запросах к представлению.",
+                "Ограничивать доступ пользователей к определенным столбцам или строкам из базовых таблиц.",
+                "Автоматически аудировать все операции DML, выполняемые через представление."
+            ],
+            correctAnswer: "Ограничивать доступ пользователей к определенным столбцам или строкам из базовых таблиц."
+        },
+        {
+            question: "В PostgreSQL, какие из следующих ограничений базы данных обычно приводят к автоматическому созданию базового индекса для ограниченных столбцов?",
+            options: [
+                "Ограничения CHECK и ограничения FOREIGN KEY.",
+                "Ограничения NOT NULL и ограничения значения DEFAULT.",
+                "Ограничения PRIMARY KEY и ограничения UNIQUE.",
+                "Ограничения EXCLUSION и определения TRIGGER."
+            ],
+            correctAnswer: "Ограничения PRIMARY KEY и ограничения UNIQUE."
+        },
+        {
+            question: "Какая команда SQL используется для удаления таблицы из базы данных, но только если таблица существует в данный момент, тем самым предотвращая ошибку, если она уже была удалена?",
+            options: [
+                "DELETE TABLE IF EXISTS table_name;",
+                "REMOVE TABLE table_name IF PRESENT;",
+                "DROP TABLE IF EXISTS table_name;",
+                "ERASE TABLE table_name ON EXISTENCE;"
+            ],
+            correctAnswer: "DROP TABLE IF EXISTS table_name;"
+        },
+        {
+            question: "В SQL-запросе, использующем агрегатные функции (например, COUNT(), SUM()) с предложением GROUP BY, какое предложение используется для фильтрации сгруппированных результатов на основе результата агрегатной функции?",
+            options: [
+                "WHERE",
+                "FILTER",
+                "HAVING",
+                "CONDITION"
+            ],
+            correctAnswer: "HAVING"
+        },
+        {
+            question: "Какая агрегатная функция SQL используется для определения общего количества строк в результирующем наборе запроса, включая строки со значениями NULL в некоторых столбцах?",
+            options: [
+                "SUM()",
+                "COUNT(column_name)",
+                "TOTAL()",
+                "COUNT(*)"
+            ],
+            correctAnswer: "COUNT(*)"
+        },
+        {
+            question: "Какой базовый синтаксис SQL является правильным для определения нового представления с именем active_users?",
+            options: [
+                "NEW VIEW active_users AS SELECT user_id, username FROM users WHERE status = 'active';",
+                "CREATE VIEW active_users USING SELECT user_id, username FROM users WHERE status = 'active';",
+                "DEFINE VIEW active_users AS SELECT user_id, username FROM users WHERE status = 'active';",
+                "CREATE VIEW active_users AS SELECT user_id, username FROM users WHERE status = 'active';"
+            ],
+            correctAnswer: "CREATE VIEW active_users AS SELECT user_id, username FROM users WHERE status = 'active';"
+        },
+        {
+            question: "Какая команда SQL используется для создания стандартного B-tree индекса по одному столбцу для потенциального ускорения запросов?",
+            options: [
+                "ADD INDEX index_name ON table_name (column_name);",
+                "CREATE INDEX index_name FOR table_name (column_name);",
+                "CREATE INDEX index_name ON table_name (column_name);",
+                "MAKE INDEX index_name ON table_name USING (column_name);"
+            ],
+            correctAnswer: "CREATE INDEX index_name ON table_name (column_name);"
+        },
+        {
+            question: "Какое выражение SQL позволяет реализовывать логику if-then-else непосредственно в запросе для получения различных результатов в зависимости от условий?",
+            options: [
+                "IF ... THEN ... ELSE ... ENDIF",
+                "DECODE(condition, result1, condition2, result2, ..., else_result)",
+                "SWITCH ... CASE ... DEFAULT ... END",
+                "CASE WHEN condition1 THEN result1 ... ELSE else_result END"
+            ],
+            correctAnswer: "CASE WHEN condition1 THEN result1 ... ELSE else_result END"
+        },
+        {
+            question: "Какая команда SQL корректно удаляет индекс из базы данных, одновременно предотвращая ошибку, если индекс не существует?",
+            options: [
+                "DELETE INDEX IF EXISTS index_name;",
+                "DROP INDEX IF EXISTS index_name;",
+                "REMOVE INDEX index_name IF PRESENT;",
+                "ERASE INDEX IF NOT EXISTS index_name;"
+            ],
+            correctAnswer: "DROP INDEX IF EXISTS index_name;"
+        },
+        {
+            question: "Какое утверждение правильно описывает операционную разницу между предложениями WHERE и HAVING в SQL-запросах, включающих агрегацию?",
+            options: [
+                "WHERE фильтрует данные после группировки, тогда как HAVING фильтрует до группировки.",
+                "WHERE фильтрует отдельные строки до их группировки и агрегации, тогда как HAVING фильтрует сами группы после агрегации.",
+                "И WHERE, и HAVING применяются одновременно после агрегации.",
+                "WHERE может использовать агрегатные функции для фильтрации, тогда как HAVING не может."
+            ],
+            correctAnswer: "WHERE фильтрует отдельные строки до их группировки и агрегации, тогда как HAVING фильтрует сами группы после агрегации."
+        },
+        {
+            question: "Каково основное назначение опции OR REPLACE в операторе CREATE VIEW?",
+            options: [
+                "Для переименования существующего представления, если новое имя отличается.",
+                "Для создания представления только в том случае, если оно еще не существует, в противном случае ничего не делать.",
+                "Для обновления определения существующего представления или его создания, если оно не существует.",
+                "Для принудительного пересоздания представления с удалением всех зависимых объектов."
+            ],
+            correctAnswer: "Для обновления определения существующего представления или его создания, если оно не существует."
+        },
+        {
+            question: "После создания представления, как обычно извлекаются из него данные?",
+            options: [
+                "С помощью команды EXECUTE VIEW view_name;.",
+                "Путем вызова специальной хранимой процедуры, связанной с представлением.",
+                "С помощью стандартного оператора SELECT, аналогично запросу к таблице.",
+                "С помощью команды FETCH DATA FROM VIEW view_name;."
+            ],
+            correctAnswer: "С помощью стандартного оператора SELECT, аналогично запросу к таблице."
+        },
+        {
+            question: "Какое ограничение SQL используется для обеспечения того, чтобы значения, вводимые в определенный столбец, соответствовали заданному условию, например, чтобы значение было положительным или принадлежало к предопределенному списку вариантов?",
+            options: [
+                "VALIDATE",
+                "ASSERT",
+                "ENSURE",
+                "CHECK"
+            ],
+            correctAnswer: "CHECK"
+        },
+        {
+            question: "При определении столбца, который должен автоматически генерировать уникальные целочисленные значения для каждой новой строки и служить первичным идентификатором таблицы, какая комбинация ключевых слов SQL обычно используется в PostgreSQL?",
+            options: [
+                "AUTO_NUMBER PRIMARY",
+                "IDENTITY KEY UNIQUE",
+                "SERIAL PRIMARY KEY",
+                "INCREMENTAL ID NOT NULL"
+            ],
+            correctAnswer: "SERIAL PRIMARY KEY"
+        },
+        {
+            question: "При последовательном соединении трех таблиц (например, TableA, TableB, TableC), где TableA соединяется с TableB, а затем результат этого соединения соединяется с TableC, как обычно структурируются условия ON?",
+            options: [
+                "FROM TableA JOIN TableB ON TableA.key = TableC.key JOIN TableC ON TableB.key = TableC.key",
+                "FROM TableA JOIN TableB JOIN TableC ON TableA.key = TableB.key AND TableB.key = TableC.key",
+                "FROM TableA JOIN TableB ON TableA.join_col_AB = TableB.join_col_AB JOIN TableC ON TableB.join_col_BC = TableC.join_col_BC",
+                "FROM TableA, TableB, TableC WHERE TableA.key = TableB.key AND TableA.key = TableC.key"
+            ],
+            correctAnswer: "FROM TableA JOIN TableB ON TableA.join_col_AB = TableB.join_col_AB JOIN TableC ON TableB.join_col_BC = TableC.join_col_BC"
+        },
+        {
+            question: "Как агрегатная функция AVG() обрабатывает значения NULL в числовом столбце при вычислении среднего значения?",
+            options: [
+                "Она рассматривает значения NULL как ноль, включая их в подсчет и сумму.",
+                "Она полностью игнорирует значения NULL, поэтому они не влияют на подсчет или сумму, используемые для среднего значения.",
+                "Она вызывает ошибку запроса, если присутствуют какие-либо значения NULL.",
+                "Она возвращает NULL для среднего значения, если в столбце встречается какое-либо значение NULL."
+            ],
+            correctAnswer: "Она полностью игнорирует значения NULL, поэтому они не влияют на подсчет или сумму, используемые для среднего значения."
+        },
+        {
+            question: "Для создания представления, которое отображает данные, объединенные из двух или более связанных таблиц, какое предложение SQL обычно является обязательным в определяющем SELECT запросе представления?",
+            options: [
+                "UNION ALL",
+                "INTERSECT",
+                "JOIN",
+                "MERGE"
+            ],
+            correctAnswer: "JOIN"
+        },
+        {
+            question: "Что наилучшим образом описывает ПРЕДСТАВЛЕНИЕ SQL с точки зрения хранения данных?",
+            options: [
+                "Оно физически хранит копию данных из базовых таблиц.",
+                "Это виртуальная таблица, содержимое которой определяется хранимым запросом.",
+                "Оно временно хранит данные только во время выполнения запроса к нему.",
+                "Оно кэширует часто используемые данные для более быстрого извлечения."
+            ],
+            correctAnswer: "Это виртуальная таблица, содержимое которой определяется хранимым запросом."
+        },
+        {
+            question: "Основное определение представления SQL, которое определяет его столбцы и строки, задается с помощью:",
+            options: [
+                "Оператора CREATE TABLE AS.",
+                "Оператора SELECT.",
+                "Серии операторов INSERT.",
+                "Оператора ALTER TABLE."
+            ],
+            correctAnswer: "Оператора SELECT."
+        },
+        {
+            question: "При составлении SQL-запроса, который соединяет таблицу саму с собой (self-join), какое требование является обязательным для различения разных ссылок на одну и ту же таблицу?",
+            options: [
+                "Явное использование ключевого слова SELF JOIN.",
+                "Убедиться, что таблица имеет составной первичный ключ.",
+                "Использование различных псевдонимов таблицы для каждой ссылки на таблицу.",
+                "Фильтрация результатов с помощью предложения WHERE, сравнивающего идентичные столбцы из обеих ссылок."
+            ],
+            correctAnswer: "Использование различных псевдонимов таблицы для каждой ссылки на таблицу."
+        },
+        {
+            question: "Согласно учебному пособию, какой тип индекса по умолчанию используется PostgreSQL при создании индекса без указания предложения USING method?",
+            options: [
+                "Хеш-индекс (Hash)",
+                "GiST",
+                "B-дерево (B-tree)",
+                "GIN"
+            ],
+            correctAnswer: "B-дерево (B-tree)"
+        },
+        {
+            question: "Какая команда SQL используется для перестроения всех существующих индексов для конкретной таблицы, часто для устранения фрагментации?",
+            options: [
+                "OPTIMIZE INDEXES FOR table_name;",
+                "REBUILD ALL INDEXES ON table_name;",
+                "REINDEX TABLE table_name;",
+                "DEFRAGMENT INDEXES table_name;"
+            ],
+            correctAnswer: "REINDEX TABLE table_name;"
+        },
+        {
+            question: "Каково основное назначение UNIQUE INDEX помимо потенциального ускорения извлечения данных?",
+            options: [
+                "Он разрешает только не-NULL значения в индексируемом столбце.",
+                "Он обеспечивает, чтобы все значения в индексируемом столбце (столбцах) были уникальными в пределах таблицы.",
+                "Он автоматически физически сортирует данные таблицы на основе индексируемого столбца.",
+                "Это единственный тип индекса, который может использоваться для первичных ключей."
+            ],
+            correctAnswer: "Он обеспечивает, чтобы все значения в индексируемом столбце (столбцах) были уникальными в пределах таблицы."
+        },
+        {
+            question: "Агрегатные функции MIN() и MAX() могут работать с какими из следующих общих категорий типов данных?",
+            options: [
+                "Только числовые типы данных.",
+                "Только числовые и строковые типы данных.",
+                "Числовые, строковые и типы данных даты/времени.",
+                "Любой тип данных без ограничений."
+            ],
+            correctAnswer: "Числовые, строковые и типы данных даты/времени."
+        },
+        {
+            question: "Какая строковая функция SQL предназначена для замены всех вхождений указанной подстроки в данной строке другой подстрокой?",
+            options: [
+                "SUBSTRING(string FROM start FOR length)",
+                "ALTER(string, from_substring, to_substring)",
+                "REPLACE(string, from_substring, to_substring)",
+                "MODIFY(string, from_substring, to_substring)"
+            ],
+            correctAnswer: "REPLACE(string, from_substring, to_substring)"
+        },
+        {
+            question: "Какое представление системного каталога в PostgreSQL можно запросить, чтобы получить список существующих индексов вместе с их определениями для конкретной таблицы?",
+            options: [
+                "pg_catalog.pg_tables",
+                "pg_catalog.pg_views",
+                "pg_catalog.pg_indexes",
+                "pg_catalog.pg_constraints"
+            ],
+            correctAnswer: "pg_catalog.pg_indexes"
+        },
+        {
+            question: "Если предпринимается попытка удалить представление с помощью DROP VIEW view_name; (без CASCADE), и от этого представления зависят другие объекты базы данных, каково поведение по умолчанию?",
+            options: [
+                "Представление удаляется, и все зависимые объекты также автоматически удаляются.",
+                "Представление удаляется, но зависимые объекты могут стать недействительными.",
+                "Оператор DROP VIEW завершится ошибкой, и представление не будет удалено.",
+                "Система базы данных запросит у пользователя подтверждение на удаление зависимых объектов."
+            ],
+            correctAnswer: "Оператор DROP VIEW завершится ошибкой, и представление не будет удалено."
+        },
+        {
+            question: "Каково основное преимущество использования псевдонимов таблиц (например, ... FROM main_table AS mt) в SQL-запросах, особенно при соединении нескольких таблиц?",
+            options: [
+                "Значительно увеличить скорость выполнения запроса.",
+                "Улучшить читаемость запроса и избежать неоднозначности, если столбцы из разных таблиц имеют одинаковые имена.",
+                "Автоматически создавать временные индексы для столбцов, используемых в условиях соединения."
+            ],
+            correctAnswer: "Улучшить читаемость запроса и избежать неоднозначности, если столбцы из разных таблиц имеют одинаковые имена."
+        },
+        {
+            question: "Каков результат функции FLOOR(number) при применении к положительному десятичному числу, такому как 9.87?",
+            options: [
+                "10",
+                "9.9",
+                "9",
+                "9.8"
+            ],
+            correctAnswer: "9"
+        },
+        {
+            question: "Какую числовую функцию вы бы использовали, чтобы округлить число типа 789.123 до ближайшей сотни, получив 800?",
+            options: [
+                "ROUND(789.123, 2)",
+                "ROUND(789.123, -2)",
+                "CEIL(789.123, -2)",
+                "FLOOR(789.123 TO 100)"
+            ],
+            correctAnswer: "ROUND(789.123, -2)"
+        },
+        {
+            question: "Каково основное предназначение оператора || в SQL, особенно рекомендуемого в PostgreSQL для работы со строками?",
+            options: [
+                "Для выполнения логической операции ИЛИ в предложении WHERE.",
+                "Для конкатенации (объединения) двух или более строк.",
+                "Для вычисления побитового ИЛИ двух целочисленных значений.",
+                "Для указания альтернативных значений в функции COALESCE."
+            ],
+            correctAnswer: "Для конкатенации (объединения) двух или более строк."
+        },
+        {
+            question: "При использовании функции EXTRACT() для получения определенной части из значения даты или временной метки, какое ключевое слово field используется для извлечения дня недели (где воскресенье обычно равно 0)?",
+            options: [
+                "WEEKDAY",
+                "DAY_OF_WEEK",
+                "DOW",
+                "DAYNUM"
+            ],
+            correctAnswer: "DOW"
+        },
+        {
+            question: "При определении представления, которое включает агрегатные функции (например, COUNT(), AVG()) в своем списке SELECT, какое предложение SQL обычно требуется в определяющем запросе представления?",
+            options: [
+                "HAVING",
+                "ORDER BY",
+                "WHERE",
+                "GROUP BY"
+            ],
+            correctAnswer: "GROUP BY"
+        },
+        {
+            question: "Если в SQL-запросе используется ключевое слово JOIN между двумя таблицами без указания INNER, LEFT, RIGHT или FULL OUTER, какой тип соединения обычно предполагается по умолчанию?",
+            options: [
+                "LEFT JOIN",
+                "FULL OUTER JOIN",
+                "INNER JOIN",
+                "CROSS JOIN"
+            ],
+            correctAnswer: "INNER JOIN"
+        },
+        {
+            question: "Что возвращает выражение NULLIF(value1, value2), если value1 НЕ равно value2?",
+            options: [
+                "NULL",
+                "value1",
+                "value2",
+                "Ошибку, так как функция ожидает, что value1 и value2 будут равны."
+            ],
+            correctAnswer: "value1"
+        },
+        {
+            question: "Если функция TRIM() используется без указания LEADING, TRAILING или BOTH и без указания символов для удаления, каково ее поведение по умолчаниюexecution_type для строки?",
+            options: [
+                "Она удаляет только начальные пробельные символы.",
+                "Она удаляет только конечные пробельные символы.",
+                "Она удаляет как начальные, так и конечные пробельные символы.",
+                "Она удаляет все вхождения пробельных символов по всей строке."
+            ],
+            correctAnswer: "Она удаляет как начальные, так и конечные пробельные символы."
+        },
+        {
+            question: "Чтобы найти количество уникальных, не-NULL записей в определенном столбце, какое выражение SQL следует использовать?",
+            options: [
+                "UNIQUE COUNT(column_name)",
+                "COUNT(DISTINCT column_name)",
+                "DISTINCT(COUNT(column_name))",
+                "COUNT(column_name UNIQUE)"
+            ],
+            correctAnswer: "COUNT(DISTINCT column_name)"
+        },
+        {
+            question: "Какая команда SQL используется для окончательного удаления представления из схемы базы данных?",
+            options: [
+                "DELETE VIEW view_name;",
+                "REMOVE VIEW view_name;",
+                "DROP VIEW view_name;",
+                "ERASE VIEW view_name;"
+            ],
+            correctAnswer: "DROP VIEW view_name;"
+        },
+        {
+            question: "Какова основная функциональность выражения COALESCE() в SQL?",
+            options: [
+                "Для преобразования значения из одного типа данных в другой, гарантируя отсутствие null-значений.",
+                "Для возврата первого не-NULL выражения из списка аргументов.",
+                "Для объединения (конкатенации) нескольких строковых аргументов в один.",
+                "Для оценки условия и возврата NULL, если условие выполняется, в противном случае — возврата исходного значения."
+            ],
+            correctAnswer: "Для возврата первого не-NULL выражения из списка аргументов."
+        },
+        {
+            question: "Что из перечисленного представляет собой сокращенный синтаксис PostgreSQL для приведения типов, эквивалентный стандартному SQL CAST(expression AS type)?",
+            options: [
+                "CONVERT(type, expression)",
+                "expression::type",
+                "TYPE(expression, type)",
+                "TO_TYPE(expression, type)"
+            ],
+            correctAnswer: "expression::type"
+        },
+        {
+            question: "Какая структура SQL-запроса подходит для выбора категорий и их общего количества, но включая только те категории, где общее количество больше 10?",
+            options: [
+                "SELECT category, COUNT() FROM products WHERE COUNT() > 10 GROUP BY category;",
+                "SELECT category, COUNT() FROM products GROUP BY category HAVING COUNT() > 10;",
+                "SELECT category, COUNT() FROM products GROUP BY category, COUNT() WHERE COUNT(*) > 10;",
+                "SELECT category, COUNT() FROM products GROUP BY category ORDER BY COUNT() > 10;"
+            ],
+            correctAnswer: "SELECT category, COUNT() FROM products GROUP BY category HAVING COUNT() > 10;"
+        },
+        {
+            question: "При выполнении агрегатной суммы (например, SUM(column_name)) по данным, которые могут включать группы без совпадающих записей (часто из-за LEFT JOIN), какая функция SQL может быть использована для замены потенциальных NULL результатов суммы нулем или другим значением по умолчанию?",
+            options: [
+                "IFNULL(SUM(column_name), 0)",
+                "NULL_TO_ZERO(SUM(column_name))",
+                "REPLACE_NULL(SUM(column_name), 0)",
+                "COALESCE(SUM(column_name), 0)"
+            ],
+            correctAnswer: "COALESCE(SUM(column_name), 0)"
+        },
+        {
+            question: "Какое из следующих предложений SQL специально предназначено для фильтрации групп, созданных предложением GROUP BY, на основе результатов агрегатных функций?",
+            options: [
+                "WHERE",
+                "FILTER",
+                "HAVING",
+                "GROUP FILTER"
+            ],
+            correctAnswer: "HAVING"
+        },
+        {
+            question: "Какой тип индекса специально разработан для включения записей только для подмножества строк таблицы, удовлетворяющих условию, определенному в предложении WHERE?",
+            options: [
+                "Условный индекс",
+                "Частичный индекс",
+                "Фильтрованный индекс",
+                "Селективный индекс"
+            ],
+            correctAnswer: "Частичный индекс"
+        },
+        {
+            question: "Какой тип SQL-соединения наиболее подходит, когда необходимо извлечь все записи из первой таблицы и совпадающие записи из второй таблицы, отображая NULL для столбцов второй таблицы, если совпадение не найдено?",
+            options: [
+                "LEFT JOIN",
+                "RIGHT JOIN",
+                "INNER JOIN",
+                "FULL OUTER JOIN"
+            ],
+            correctAnswer: "LEFT JOIN"
+        }
+    ];
+
+
+    function buildQuiz() {
+        const output = [];
+        questions.forEach((currentQuestion, questionNumber) => {
+            const options = [];
+            currentQuestion.options.forEach((option, optionIndex) => {
+                options.push(
+                    `<label>
+                        <input type="radio" name="question${questionNumber}" value="${option.replace(/"/g, '"')}">
+                        ${option}
+                    </label>`
+                );
+            });
+
+            output.push(
+                `<div class="question-block">
+                    <div class="question-text">${questionNumber + 1}. ${currentQuestion.question}</div>
+                    <div class="options">${options.join('')}</div>
+                </div>`
+            );
+        });
+        quizContainer.innerHTML = output.join('');
+    }
+
+    function showResults() {
+        const answerContainers = quizContainer.querySelectorAll('.options');
+        const questionBlocks = quizContainer.querySelectorAll('.question-block');
+        let numCorrect = 0;
+
+        questions.forEach((currentQuestion, questionNumber) => {
+            const answerContainer = answerContainers[questionNumber];
+            const selector = `input[name=question${questionNumber}]:checked`;
+            const userAnswerNode = (answerContainer.querySelector(selector));
+            const userAnswer = userAnswerNode ? userAnswerNode.value : undefined;
+            const labels = answerContainer.getElementsByTagName('label');
+
+            // Сброс предыдущих стилей
+            Array.from(labels).forEach(label => {
+                label.classList.remove('correct-answer', 'incorrect-answer', 'highlight-correct');
+            });
+            
+            let answeredCorrectly = false;
+
+            if (userAnswerNode) {
+                const selectedLabel = userAnswerNode.parentElement;
+                if (userAnswer === currentQuestion.correctAnswer) {
+                    numCorrect++;
+                    selectedLabel.classList.add('correct-answer');
+                    answeredCorrectly = true;
+                } else {
+                    selectedLabel.classList.add('incorrect-answer');
+                }
+            }
+            
+            // Подсветить правильный ответ, если пользователь ошибся или не ответил
+            if (!answeredCorrectly) {
+                 Array.from(labels).forEach(label => {
+                    const radio = label.querySelector('input[type="radio"]');
+                    if (radio && radio.value === currentQuestion.correctAnswer) {
+                        label.classList.add('highlight-correct');
+                    }
+                });
+            }
+        });
+
+        resultsContainer.innerHTML = `<h2>Результаты</h2><p>Вы ответили правильно на ${numCorrect} из ${questions.length} вопросов.</p>`;
+    }
+
+    buildQuiz();
+    submitButton.addEventListener('click', showResults);
+});
+
+    </script>
+</body>
+</html>
